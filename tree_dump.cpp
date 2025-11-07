@@ -36,7 +36,7 @@ FillDotFile (TreeContext_t* TreeContext, const char* file_name)
     }
 
     MakeDumpTitle (dot_file);
-    MakeDumpNode  (dot_file, TreeContext->head, 1);
+    MakeDumpNode  (dot_file, TreeContext->head);
     MakeDumpEdge  (dot_file, TreeContext->head);
     
     fprintf (dot_file, "}\n");
@@ -57,49 +57,19 @@ MakeDumpTitle (FILE* dot_file)
 }
 
 //--------------------------------------------------------------------------------
-int inv_count = -1;
+
 void 
-MakeDumpNode (FILE* dot_file, TreeNode_t* Node, int rank)
+MakeDumpNode (FILE* dot_file, TreeNode_t* Node)
 {
     DEBUG_ASSERT (dot_file != NULL);
 
-        fprintf (dot_file, "\tnode%d [label=\"{<idx> idx:%d | <data> data:%d }\", style=filled, color=aqua];\n", 
-            Node->idx, Node->idx, Node->data);
-    
-    int new_rank = rank + 1, num_1 = 0, num_2 = 0;
+    fprintf (dot_file, "\tnode%d [label=\"{<idx> idx:%d | <data> data:%d }\", style=filled, color=aqua];\n", 
+        Node->idx, Node->idx, Node->data);
 
     if (Node->left)
-        MakeDumpNode (dot_file, Node->left, new_rank);
-    // else {
-    //     num_1 = inv_count;
-    //     fprintf (dot_file, "\tnode_%d [label=\"{<idx> idx:%d | <data> data:0 }\", style=invis];\n", 
-    //         inv_count, - inv_count);
-    //     inv_count--;
-    // }
-
+        MakeDumpNode (dot_file, Node->left);
     if (Node->right)
-        MakeDumpNode (dot_file, Node->right, new_rank);
-    // else {
-    //     num_2 = inv_count;
-    //     fprintf (dot_file, "\tnode_%d [label=\"{<idx> idx:%d | <data> data:0 }\", style=invis];\n", 
-    //         inv_count, - inv_count);
-    //     inv_count--;
-    // }
-
-        // fprintf (dot_file, "\t{rank=same;");
-
-        // if (Node->left)
-        //     fprintf (dot_file, " node%d;", Node->left->idx);
-        // else
-        //     fprintf (dot_file, " node_%d;", - num_1);
-
-        // if (Node->right)
-        //     fprintf (dot_file, " node%d;", Node->right->idx);
-        // else
-        //     fprintf (dot_file, " node_%d;", - num_2);
-
-        // fprintf (dot_file, "}\n");
-    
+        MakeDumpNode (dot_file, Node->right);
 }
 
 //--------------------------------------------------------------------------------
@@ -142,7 +112,7 @@ TreeDump (TreeContext_t* TreeContext)
         return TREE_OPEN_FILE_ERR;
     }
 
-    printf ("Generated DOT file:  %s\n", dot_file_name);
+    printf ("\nGenerated DOT file:  %s\n", dot_file_name);
     
     snprintf (command, sizeof(command), "dot -Tsvg %s -o %s", dot_file_name, svg_file_name);
 
@@ -150,7 +120,7 @@ TreeDump (TreeContext_t* TreeContext)
     
     if (result == 0)
     {
-        printf ("Generated SVG image: %s\n", svg_file_name);
+        printf ("Generated SVG image: %s\n\n", svg_file_name);
     }
     else
     {
@@ -189,7 +159,7 @@ TreeStartFillHtml (void)
 tree_err_t 
 TreeFillHtml (TreeContext_t* TreeContext, const char* file_name)
 {
-    FILE* html_file = fopen ("list_dump.html", "a");
+    FILE* html_file = fopen ("tree_dump.html", "a");
 
     if (html_file == NULL)
     {
