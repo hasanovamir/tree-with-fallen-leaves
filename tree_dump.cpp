@@ -53,7 +53,18 @@ MakeDumpTitle (FILE* dot_file)
 {
     DEBUG_ASSERT (dot_file != NULL);
 
-    fprintf (dot_file, "digraph ListDump {\n\trankdir=TB;\n\tnode [shape=Mrecord, fontname=\"Courier\"];\n\n\n\tgraph [splines=ortho]\n\toverlap=false;\n\n");
+    char title[] = 
+
+R"(digraph ListDump {
+    rankdir=TB;
+    node [shape=Mrecord, fontname="Courier"];
+
+    graph [splines=ortho]
+    overlap=false;
+    
+)";
+
+    fprintf (dot_file, title);
 }
 
 //--------------------------------------------------------------------------------
@@ -100,12 +111,12 @@ TreeDump (TreeContext_t* TreeContext)
 {
     TreeContext->num_calls++;
 
-    char dot_file_name[20];
-    char svg_file_name[20];
-    char command[100];
+    char dot_file_name[MAXFILENAMESIZE];
+    char svg_file_name[MAXFILENAMESIZE];
+    char command[MAXCOMMANDSIZE];
     
-    snprintf (dot_file_name, sizeof(dot_file_name), "dot/%s_%d.dot", "call", TreeContext->num_calls);
-    snprintf (svg_file_name, sizeof(svg_file_name), "svg/%s_%d.svg", "call", TreeContext->num_calls);
+    snprintf (dot_file_name, MAXFILENAMESIZE, "dot/%s_%d.dot", "call", TreeContext->num_calls);
+    snprintf (svg_file_name, MAXFILENAMESIZE, "svg/%s_%d.svg", "call", TreeContext->num_calls);
     
     if (FillDotFile (TreeContext, dot_file_name))
     {
@@ -167,9 +178,9 @@ TreeFillHtml (TreeContext_t* TreeContext, const char* file_name)
         return   (TREE_OPEN_FILE_ERR);
     }
 
-    char string[500] = "";
+    char string[MAXSTRINGSIZE] = "";
 
-    snprintf (string, 500, "\t<h2>CALL = #%d</h2>\n\t<p>HEAD = %p</p>\n\t<img src=\"%s\">\n\n", 
+    snprintf (string, MAXSTRINGSIZE, "\t<h2>CALL = #%d</h2>\n\t<p>HEAD = %p</p>\n\t<img src=\"%s\">\n\n", 
         TreeContext->num_calls, TreeContext->head, file_name);
 
     fprintf (html_file, string);

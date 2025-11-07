@@ -3,11 +3,11 @@
 //--------------------------------------------------------------------------------
 
 tree_err_t 
-TreeInit (TreeContext_t* TreeContext)
+TreeInit (TreeContext_t* TreeContext) // creat TreeContext in init and put it in header like extern
 {
     DEBUG_ASSERT (TreeContext != NULL);
 
-    TreeContext->src = (TreeNode_t*) calloc (1000, sizeof (TreeNode_t));
+    TreeContext->src = (TreeNode_t*) calloc (ALLOCSTARTCAPACITY, sizeof (TreeNode_t));
 
     if (TreeContext->src == NULL)
     {
@@ -15,7 +15,7 @@ TreeInit (TreeContext_t* TreeContext)
         return   (TREE_ALLOC_ERR);
     }
 
-    TreeContext->src_cap = 1000;
+    TreeContext->src_cap = ALLOCSTARTCAPACITY;
 
     return TREE_SUCCESS;
 }
@@ -43,6 +43,19 @@ MyAlloc (TreeContext_t* TreeContext, int count)
     TreeContext->src_size += count;
 
     return TreeContext->src + TreeContext->src_size - count;
+}
+
+//--------------------------------------------------------------------------------
+
+void 
+TreeDestroy (TreeContext_t* TreeContext)
+{
+    DEBUG_ASSERT (TreeContext      != NULL);
+    DEBUG_ASSERT (TreeContext->src != NULL);
+
+    free (TreeContext->src);
+
+    TreeContext->src = NULL;
 }
 
 //--------------------------------------------------------------------------------

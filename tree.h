@@ -13,6 +13,13 @@ typedef int tree_data_t;
 
 //————————————————————————————————————————————————————————————————————————————————
 
+const int ALLOCSTARTCAPACITY = 1024;
+const int MAXSTRINGSIZE      = 256;
+const int MAXCOMMANDSIZE     = 128;
+const int MAXFILENAMESIZE    = 32;
+
+//————————————————————————————————————————————————————————————————————————————————
+
 typedef enum
 {
     TREE_SUCCESS,
@@ -45,6 +52,7 @@ struct TreeContext_t {
 
 void        MakeDumpTitle     (FILE* dot_file);
 void        PrintNode         (const TreeNode_t* Node);
+void        TreeDestroy       (TreeContext_t* TreeContext);
 void        MakeDumpNode      (FILE* dot_file, TreeNode_t* Node);
 void        MakeDumpEdge      (FILE* dot_file, TreeNode_t* Node);
 tree_err_t  TreeStartFillHtml (void);
