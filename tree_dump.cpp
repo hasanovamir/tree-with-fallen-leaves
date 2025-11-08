@@ -74,8 +74,8 @@ MakeDumpNode (FILE* dot_file, TreeNode_t* Node)
 {
     DEBUG_ASSERT (dot_file != NULL);
 
-    fprintf (dot_file, "\tnode%d [label=\"{<idx> idx:%d | <data> data:%d }\", style=filled, color=aqua];\n", 
-        Node->idx, Node->idx, Node->data);
+    fprintf (dot_file, "\tnode%d [label=\"{<data> data:%d | <idx> idx:%d | <ptr> ptr:%p | {<left> left=%p | <right> right=%p } }\", style=filled, color=lime];\n", 
+        Node->idx, Node->data, Node->idx, Node, Node->left, Node->right);
 
     if (Node->left)
         MakeDumpNode (dot_file, Node->left);
